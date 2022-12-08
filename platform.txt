@@ -14,7 +14,7 @@ teensytools.path={runtime.hardware.path}/../tools/
 #compiler.path={runtime.tools.teensy-compile.path}/
 #teensytools.path={runtime.tools.teensy-tools.path}/
 
-
+build.flags.audio=-DAUDIO_BLOCK_SAMPLES=128
 
 ## EEPROM Data
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
@@ -35,13 +35,13 @@ tools.arduino-preprocessor.pattern="{cmd.path}" "{source_file}" "{codecomplete}"
 recipe.hooks.sketch.prebuild.1.pattern="{teensytools.path}precompile_helper" "{runtime.platform.path}/cores/{build.core}" "{build.path}" "{compiler.path}{build.toolchain}{build.command.g++}" -x c++-header {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.cpp} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} "-I{runtime.platform.path}/cores/{build.core}" "{build.path}/pch/Arduino.h" -o "{build.path}/pch/Arduino.h.gch"
 
 ## Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{build.toolchain}{build.command.g++}" -c {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.cpp} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} "-I{build.path}/pch" {includes} "{source_file}" -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{build.toolchain}{build.command.g++}" -c {build.flags.audio} {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.cpp} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} "-I{build.path}/pch" {includes} "{source_file}" -o "{object_file}"
 
 ## Compile c files
-recipe.c.o.pattern="{compiler.path}{build.toolchain}{build.command.gcc}" -c {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.c} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} {includes} "{source_file}" -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{build.toolchain}{build.command.gcc}" -c {build.flags.audio} {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.c} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile S files
-recipe.S.o.pattern="{compiler.path}{build.toolchain}{build.command.gcc}" -c {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.S} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} {includes} "{source_file}" -o "{object_file}"
+recipe.S.o.pattern="{compiler.path}{build.toolchain}{build.command.gcc}" -c {build.flags.audio} {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.S} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} {includes} "{source_file}" -o "{object_file}"
 
 ## Create archives
 recipe.ar.pattern="{compiler.path}{build.toolchain}{build.command.ar}" rcs "{archive_file_path}" "{object_file}"

@@ -1,0 +1,13 @@
+## Audio
+# Extra menu entries to tune the behaviour of the Audio library
+menu.audiotune=Audio tweaks
+teensy41.menu.audiotune.normal=Normal
+#teensy41.menu.audiotune.normal.build.audiotune=0
+teensy41.menu.audiotune.normal.build.flags.audio=-DAUDIO_BLOCK_SAMPLES=128
+teensy41.menu.audiotune.bigger=Bigger blocks (256 samples)
+#teensy41.menu.audiotune.bigger.build.audiotune=1
+teensy41.menu.audiotune.bigger.build.flags.audio=-DAUDIO_BLOCK_SAMPLES=256
+teensy40.menu.audiotune.normal=Normal
+teensy40.menu.audiotune.normal.build.flags.audio=-DAUDIO_BLOCK_SAMPLES=128
+teensy40.menu.audiotune.bigger=Bigger blocks (256 samples)
+teensy40.menu.audiotune.bigger.build.flags.audio=-DAUDIO_BLOCK_SAMPLES=256
