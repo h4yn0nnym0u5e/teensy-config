@@ -70,7 +70,7 @@ recipe.hooks.postbuild.3.pattern="{teensytools.path}teensy_size" "{build.path}/{
 # objdump to create .lst file is VERY SLOW for huge files
 # https://forum.pjrc.com/threads/68121?p=288306&viewfull=1#post288306
 #
-# recipe.hooks.postbuild.4.pattern="{teensytools.path}stdout_redirect" "{build.path}/{build.project_name}.lst" "{compiler.path}{build.toolchain}{build.command.objdump}" -d -S -C "{build.path}/{build.project_name}.elf"
+recipe.hooks.postbuild.4.pattern="{teensytools.path}stdout_redirect" "{build.path}/{build.project_name}.lst" "{compiler.path}{build.toolchain}{build.command.objdump}" -d -S -C "{build.path}/{build.project_name}.elf"
 
 
 ## Compute size
