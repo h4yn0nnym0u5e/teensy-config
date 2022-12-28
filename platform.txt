@@ -14,7 +14,11 @@ teensytools.path={runtime.hardware.path}/../tools/
 #compiler.path={runtime.tools.teensy-compile.path}/
 #teensytools.path={runtime.tools.teensy-tools.path}/
 
-build.flags.audio=-DAUDIO_BLOCK_SAMPLES=128
+build.flags.audioblocksize=128
+build.flags.audiorate=44100.0f
+build.flags.USBchannelcount=2
+
+build.flags.audio=-DAUDIO_BLOCK_SAMPLES={build.flags.audioblocksize} -DAUDIO_SAMPLE_RATE_EXACT={build.flags.audiorate} -DAUDIO_USB_CHANNEL_COUNT={build.flags.USBchannelcount}
 
 ## EEPROM Data
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
