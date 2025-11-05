@@ -1,6 +1,7 @@
 import json
+import re
 
-menud = {
+menuAudio = {
     "header":
     """## Audio
 # Extra menu entries to tune the behaviour of the Audio library
@@ -9,7 +10,7 @@ menud = {
         {
             "id": "audiorate",
             "name": "Audio sample rate",
-            "boards": ["teensy41", "teensy40"],
+            "boards": ["teensy41", "teensy40", "teensyMM"],
             "options": [
                 {"id": 44, "text": "44.1kHz",
                  "entries": ["build.flags.audiorate=44100.0f"]},
@@ -22,7 +23,7 @@ menud = {
         {
             "id": "audioblocksize",
             "name": "Audio block size",
-            "boards": ["teensy41", "teensy40"],
+            "boards": ["teensy41", "teensy40", "teensyMM"],
             "options": [
                 {"id": "normal", "text": "128 samples (normal)",
                  "entries": ["build.flags.audioblocksize=128"]},
@@ -31,25 +32,213 @@ menud = {
                 {"id": 256, "text": "256 samples",
                  "entries": ["build.flags.audioblocksize=256"]}
             ]
+        },
+        {
+            "id": "USBchannelcount",
+            "name": "USB channels",
+            "boards": ["teensy41", "teensy40", "teensyMM"],
+            "options": [
+                {"id": 2, "text": 2,
+                 "entries": ["build.flags.USBchannelcount=2"]
+                },
+                {"id": 4, "text": 4,
+                 "entries": ["build.flags.USBchannelcount=4"]
+                },
+                {"id": 6, "text": 6,
+                 "entries": ["build.flags.USBchannelcount=6"]
+                },
+                {"id": 8, "text": 8,
+                 "entries": ["build.flags.USBchannelcount=8"]
+                },
+            ]
         }
     ]
 }
 
-#print(json.dumps(menud,indent=2))
+menuGDB = {
+    "header":
+    """## GDB
+# Extra menu entries to tune the behaviour of the TeensyDebug library
+""",
+    "entries": [
+        {
+            "id": "gdb",
+            "name": "GDB",
+            "boards": ["teensy41", "teensy40", "teensyMM", "teensy31", "teensy36"],
+            "options": [
+                {"id": "off", "text": "Off",
+                 "entries": ["build.gdb=0"]},
+                {"id": "serial", "text": "Take over Serial",
+                 "entries": ["build.gdb=2",
+                             "build.flags.optimize=-Og -g -DGDB_TAKE_OVER_SERIAL",
+                             "upload.tool=gdbtool"
+                             ]},
+                {"id": "dual", "text": "Use Dual Serial",
+                 "entries": ["build.gdb=1",
+                             "build.flags.optimize=-Og -g -DGDB_DUAL_SERIAL",
+                             "upload.tool=gdbtool"
+                             ]},
+                {"id": "manual", "text": "Manual device selection",
+                 "entries": ["build.gdb=3",
+                             "build.flags.optimize=-Og -g -DGDB_MANUAL_SELECTION",
+                             "upload.tool=gdbtool"
+                             ]},
+                {"id": "compile", "text": "Just compile",
+                 "entries": ["build.gdb=0",
+                             "build.flags.optimize=-Og -g -DGDB_MANUAL_SELECTION",
+                             "upload.tool=gdbtool"
+                             ]}
+            ]
+        }
 
+    ]
+}
+
+
+menuUSB = {
+    "header":
+    """## USB
+# Extra menu entries for custom USB devices
+""",
+    "entries": [
+        {
+            "id": "usb",
+            # "name": "commented out so no additional top-level menu item",
+            "boards": ["teensy41", "teensy40", "teensyMM"],
+            "options": [
+                {"id": "serialmtpaudio", "text": "Serial + MTP + Audio",
+                 "entries": ["build.usbtype=USB_SERIAL_MTP_AUDIO",
+                             "upload_port.usbtype=USB_SERIAL_MTP_AUDIO",
+                             ]},
+                {"id": "mtpaudiomidi", "text": "MTP + Audio + MIDI",
+                 "entries": ["build.usbtype=USB_MTP_AUDIO_MIDI",
+                             "upload_port.usbtype=USB_MTP_AUDIO_MIDI",
+                             "fake_serial=teensy_gateway"
+                             ]},
+            ]
+        }
+
+    ]
+}
+
+# 
+USBdescExtras = {
+    "USB_SERIAL_MTP_AUDIO": """
+        #define VENDOR_ID        0x16C0
+        #define PRODUCT_ID        0x048A
+        #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}
+        #define MANUFACTURER_NAME_LEN    11
+        #define PRODUCT_NAME        {'T','e','e','n','s','y',' ','M','T','P','/','A','u','d','i','o'}
+        #define PRODUCT_NAME_LEN    16
+        #define EP0_SIZE        64
+        #define NUM_ENDPOINTS         7
+        #define NUM_INTERFACE        6
+        #define CDC_IAD_DESCRIPTOR    1
+        #define CDC_STATUS_INTERFACE    0
+        #define CDC_DATA_INTERFACE    1    // Serial
+        #define CDC_ACM_ENDPOINT    2
+        #define CDC_RX_ENDPOINT       3
+        #define CDC_TX_ENDPOINT       3
+        #define CDC_ACM_SIZE          16
+        #define CDC_RX_SIZE_480       512
+        #define CDC_TX_SIZE_480       512
+        #define CDC_RX_SIZE_12        64
+        #define CDC_TX_SIZE_12        64
+        
+        #define MTP_INTERFACE        2    // MTP
+        #define MTP_TX_ENDPOINT      4
+        #define MTP_TX_SIZE_12       64
+        #define MTP_TX_SIZE_480      512
+        #define MTP_RX_ENDPOINT      4
+        #define MTP_RX_SIZE_12       64
+        #define MTP_RX_SIZE_480      512
+        #define MTP_EVENT_ENDPOINT    7
+        #define MTP_EVENT_SIZE    32
+        #define MTP_EVENT_INTERVAL_12    10    // 10 = 10 ms
+        #define MTP_EVENT_INTERVAL_480 7    // 7 = 8 ms
+        
+        #define AUDIO_INTERFACE    3    // Audio (uses 3 consecutive interfaces)
+        #define AUDIO_TX_ENDPOINT     5
+        #define AUDIO_TX_SIZE         180
+        #define AUDIO_RX_ENDPOINT     5
+        #define AUDIO_RX_SIZE         180
+        #define AUDIO_SYNC_ENDPOINT    6
+        #define ENDPOINT2_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT
+        #define ENDPOINT3_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK
+        #define ENDPOINT4_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK
+        #define ENDPOINT5_CONFIG    ENDPOINT_RECEIVE_ISOCHRONOUS + ENDPOINT_TRANSMIT_ISOCHRONOUS
+        #define ENDPOINT6_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS
+        #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT
+        """
+}
+
+def insertUSBdescs(target,descs):
+    for desc in descs:
+        for entry in target['entries']:
+            for option in entry['options']:
+                optionEntries = option['entries']
+                for optionEntry in optionEntries:
+                    if optionEntry.find(desc) >= 0:
+                        option['desc'] = descs[desc]
+                        option['define'] = desc
+
+
+
+insertUSBdescs(menuUSB,USBdescExtras)
+menuAll = { "audio": menuAudio, "GDB": menuGDB, "USB": menuUSB}
+
+
+# Convert JSON description of boards.local.txt
+# into the text of the file itself, returning it
+# in a string
 def json2txt(d):
     s=""
     s += d["header"]
-    s += "\n"
-    for e in d["entries"]:
-        s += f"menu.{e['id']}={e['name']}\n"
-        for b in e["boards"]:
-            for o in e["options"]:
-                s += f"{b}.menu.{e['id']}.{o['id']}={o['text']}\n"
-                for ee in o["entries"]:
-                    s += f"{b}.menu.{e['id']}.{o['id']}.{ee}\n"
+    for entry in d["entries"]:
+        entryID = entry['id']
+        if 'name' in entry:
+            s += f"\nmenu.{entryID}={entry['name']}\n"
+        for board in entry["boards"]:
+            s += "\n"
+            for option in entry["options"]:
+                optionID = option['id']
+                root = f"{board}.menu.{entryID}.{optionID}"
+                s += f"{root}={option['text']}\n"
+                for ee in option["entries"]:
+                    s += f"{root}.{ee}\n"
         s += "\n"
     return s
 
-menud=json.load(open("boards.local.json"))
-print(json2txt(menud))
+
+# Tidy up USB descriptor defines
+def descTidy(s):
+    return re.sub("^\s+","  ",s,flags=re.MULTILINE)
+
+# Return all USB descriptor configurations
+def json2desc(d):
+    s=""
+    for entry in d["entries"]:
+        for option in entry["options"]:
+            if 'desc' in option:
+                s2  = f"#elif defined({option['define']})"
+                s2 += option['desc']
+                s += descTidy(s2)
+
+        s += "\n"
+    return s
+
+# Convert description of menu options into JSON or text 
+# Just prints the output: re-direct to a file once you're happy
+if 0:    
+    menuAll=json.load(open("boards.local.json")) # load pre-built set of options from JSON file
+
+if 1:
+    print(json.dumps(menuAll,indent=2)) # create a JSON file
+
+if 0:
+    for idx in menuAll:
+        print(json2txt(menuAll[idx])) # create the boards.local.txt file
+
+if 0:
+    for idx in menuAll:
+        print(json2desc(menuAll[idx])) # create the extras for usb_desc.h file

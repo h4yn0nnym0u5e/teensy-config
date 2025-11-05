@@ -1,105 +1,205 @@
 {
-  "header": "## Audio\n# Extra menu entries to tune the behaviour of the Audio library\n",
-  "entries": [
-    {
-      "id": "audiorate",
-      "name": "Audio sample rate",
-      "boards": [
-        "teensy41",
-        "teensy40"
-      ],
-      "options": [
-        {
-          "id": 44,
-          "text": "44.1kHz",
-          "entries": [
-            "build.flags.audiorate=44100.0f"
-          ]
-        },
-        {
-          "id": 48,
-          "text": "48kHz",
-          "entries": [
-            "build.flags.audiorate=48000.0f"
-          ]
-        },
-        {
-          "id": 96,
-          "text": "96kHz",
-          "entries": [
-            "build.flags.audiorate=96000.0f"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "audioblocksize",
-      "name": "Audio block size",
-      "boards": [
-        "teensy41",
-        "teensy40"
-      ],
-      "options": [
-        {
-          "id": "normal",
-          "text": "128 samples (normal)",
-          "entries": [
-            "build.flags.audioblocksize=128"
-          ]
-        },
-        {
-          "id": 16,
-          "text": "16 samples",
-          "entries": [
-            "build.flags.audioblocksize=16"
-          ]
-        },
-        {
-          "id": 256,
-          "text": "256 samples",
-          "entries": [
-            "build.flags.audioblocksize=256"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "USBchannelcount",
-      "name": "USB channels",
-      "boards": [
-        "teensy41",
-        "teensy40"
-      ],
-      "options": [
-        {
-          "id": 2,
-          "text": 2,
-          "entries": [
-            "build.flags.USBchannelcount=2"
-          ]
-        },
-        {
-          "id": 4,
-          "text": 4,
-          "entries": [
-            "build.flags.USBchannelcount=4"
-          ]
-        },
-        {
-          "id": 6,
-          "text": 6,
-          "entries": [
-            "build.flags.USBchannelcount=6"
-          ]
-        },
-        {
-          "id": 8,
-          "text": 8,
-          "entries": [
-            "build.flags.USBchannelcount=8"
-          ]
-        }
-      ]
-    }
-  ]
+  "audio": {
+    "header": "## Audio\n# Extra menu entries to tune the behaviour of the Audio library\n",
+    "entries": [
+      {
+        "id": "audiorate",
+        "name": "Audio sample rate",
+        "boards": [
+          "teensy41",
+          "teensy40",
+          "teensyMM"
+        ],
+        "options": [
+          {
+            "id": 44,
+            "text": "44.1kHz",
+            "entries": [
+              "build.flags.audiorate=44100.0f"
+            ]
+          },
+          {
+            "id": 48,
+            "text": "48kHz",
+            "entries": [
+              "build.flags.audiorate=48000.0f"
+            ]
+          },
+          {
+            "id": 96,
+            "text": "96kHz",
+            "entries": [
+              "build.flags.audiorate=96000.0f"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "audioblocksize",
+        "name": "Audio block size",
+        "boards": [
+          "teensy41",
+          "teensy40",
+          "teensyMM"
+        ],
+        "options": [
+          {
+            "id": "normal",
+            "text": "128 samples (normal)",
+            "entries": [
+              "build.flags.audioblocksize=128"
+            ]
+          },
+          {
+            "id": 16,
+            "text": "16 samples",
+            "entries": [
+              "build.flags.audioblocksize=16"
+            ]
+          },
+          {
+            "id": 256,
+            "text": "256 samples",
+            "entries": [
+              "build.flags.audioblocksize=256"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "USBchannelcount",
+        "name": "USB channels",
+        "boards": [
+          "teensy41",
+          "teensy40",
+          "teensyMM"
+        ],
+        "options": [
+          {
+            "id": 2,
+            "text": 2,
+            "entries": [
+              "build.flags.USBchannelcount=2"
+            ]
+          },
+          {
+            "id": 4,
+            "text": 4,
+            "entries": [
+              "build.flags.USBchannelcount=4"
+            ]
+          },
+          {
+            "id": 6,
+            "text": 6,
+            "entries": [
+              "build.flags.USBchannelcount=6"
+            ]
+          },
+          {
+            "id": 8,
+            "text": 8,
+            "entries": [
+              "build.flags.USBchannelcount=8"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "GDB": {
+    "header": "## GDB\n# Extra menu entries to tune the behaviour of the TeensyDebug library\n",
+    "entries": [
+      {
+        "id": "gdb",
+        "name": "GDB",
+        "boards": [
+          "teensy41",
+          "teensy40",
+          "teensyMM",
+          "teensy31",
+          "teensy36"
+        ],
+        "options": [
+          {
+            "id": "off",
+            "text": "Off",
+            "entries": [
+              "build.gdb=0"
+            ]
+          },
+          {
+            "id": "serial",
+            "text": "Take over Serial",
+            "entries": [
+              "build.gdb=2",
+              "build.flags.optimize=-Og -g -DGDB_TAKE_OVER_SERIAL",
+              "upload.tool=gdbtool"
+            ]
+          },
+          {
+            "id": "dual",
+            "text": "Use Dual Serial",
+            "entries": [
+              "build.gdb=1",
+              "build.flags.optimize=-Og -g -DGDB_DUAL_SERIAL",
+              "upload.tool=gdbtool"
+            ]
+          },
+          {
+            "id": "manual",
+            "text": "Manual device selection",
+            "entries": [
+              "build.gdb=3",
+              "build.flags.optimize=-Og -g -DGDB_MANUAL_SELECTION",
+              "upload.tool=gdbtool"
+            ]
+          },
+          {
+            "id": "compile",
+            "text": "Just compile",
+            "entries": [
+              "build.gdb=0",
+              "build.flags.optimize=-Og -g -DGDB_MANUAL_SELECTION",
+              "upload.tool=gdbtool"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "USB": {
+    "header": "## USB\n# Extra menu entries for custom USB devices\n",
+    "entries": [
+      {
+        "id": "usb",
+        "boards": [
+          "teensy41",
+          "teensy40",
+          "teensyMM"
+        ],
+        "options": [
+          {
+            "id": "serialmtpaudio",
+            "text": "Serial + MTP + Audio",
+            "entries": [
+              "build.usbtype=USB_SERIAL_MTP_AUDIO",
+              "upload_port.usbtype=USB_SERIAL_MTP_AUDIO"
+            ],
+            "desc": "\n        #define VENDOR_ID        0x16C0\n        #define PRODUCT_ID        0x048A\n        #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}\n        #define MANUFACTURER_NAME_LEN    11\n        #define PRODUCT_NAME        {'T','e','e','n','s','y',' ','M','T','P','/','A','u','d','i','o'}\n        #define PRODUCT_NAME_LEN    16\n        #define EP0_SIZE        64\n        #define NUM_ENDPOINTS         7\n        #define NUM_INTERFACE        6\n        #define CDC_IAD_DESCRIPTOR    1\n        #define CDC_STATUS_INTERFACE    0\n        #define CDC_DATA_INTERFACE    1    // Serial\n        #define CDC_ACM_ENDPOINT    2\n        #define CDC_RX_ENDPOINT       3\n        #define CDC_TX_ENDPOINT       3\n        #define CDC_ACM_SIZE          16\n        #define CDC_RX_SIZE_480       512\n        #define CDC_TX_SIZE_480       512\n        #define CDC_RX_SIZE_12        64\n        #define CDC_TX_SIZE_12        64\n        \n        #define MTP_INTERFACE        2    // MTP\n        #define MTP_TX_ENDPOINT      4\n        #define MTP_TX_SIZE_12       64\n        #define MTP_TX_SIZE_480      512\n        #define MTP_RX_ENDPOINT      4\n        #define MTP_RX_SIZE_12       64\n        #define MTP_RX_SIZE_480      512\n        #define MTP_EVENT_ENDPOINT    7\n        #define MTP_EVENT_SIZE    32\n        #define MTP_EVENT_INTERVAL_12    10    // 10 = 10 ms\n        #define MTP_EVENT_INTERVAL_480 7    // 7 = 8 ms\n        \n        #define AUDIO_INTERFACE    3    // Audio (uses 3 consecutive interfaces)\n        #define AUDIO_TX_ENDPOINT     5\n        #define AUDIO_TX_SIZE         180\n        #define AUDIO_RX_ENDPOINT     5\n        #define AUDIO_RX_SIZE         180\n        #define AUDIO_SYNC_ENDPOINT    6\n        #define ENDPOINT2_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT\n        #define ENDPOINT3_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK\n        #define ENDPOINT4_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK\n        #define ENDPOINT5_CONFIG    ENDPOINT_RECEIVE_ISOCHRONOUS + ENDPOINT_TRANSMIT_ISOCHRONOUS\n        #define ENDPOINT6_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS\n        #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT\n        ",
+            "define": "USB_SERIAL_MTP_AUDIO"
+          },
+          {
+            "id": "mtpaudiomidi",
+            "text": "MTP + Audio + MIDI",
+            "entries": [
+              "build.usbtype=USB_MTP_AUDIO_MIDI",
+              "upload_port.usbtype=USB_MTP_AUDIO_MIDI",
+              "fake_serial=teensy_gateway"
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
