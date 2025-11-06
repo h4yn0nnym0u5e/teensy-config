@@ -1,4 +1,4 @@
-
+#if 0
 #elif defined(USB_SERIAL_MTP_AUDIO)
   #define VENDOR_ID        0x16C0
   #define PRODUCT_ID       0x048A
@@ -49,7 +49,7 @@
   
 #elif defined(USB_MTP_AUDIO_MIDI)
   #define VENDOR_ID        0x16C0
-  #define PRODUCT_ID       0x04D1
+  #define PRODUCT_ID       0x0484
   #define BCD_DEVICE		 0x0210
   #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}
   #define MANUFACTURER_NAME_LEN    11
@@ -102,3 +102,4 @@
   #define ENDPOINT6_CONFIG    ENDPOINT_RECEIVE_ISOCHRONOUS + ENDPOINT_TRANSMIT_ISOCHRONOUS // Audio TX/RX
   #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS // Audio sync
   
+#endif

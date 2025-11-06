@@ -127,6 +127,17 @@ menuUSB = {
 
 ###################################################################
 # New USB options - must match entries in menuUSB
+#
+# Note: to use SEREMU the PRODUCT_ID must have one of the
+# following values: 
+#   0x0482, 0x0484, 0x0485, 0x0486, 0x0488 or
+#   0x04D0, 0x04D1, 0x04D2, 0x04D3, 0x04D4
+# (This is undocumented at the time of writing, AFAIK)
+# Of these, only 0x0484 is unused, as of Teensyduino 1.59-ish
+# This is by hex inspection of teensy_gateway.exe and some testing
+# Use teensy_ports.exe to observe behaviour; unrecognised PID values
+# are reported as an Unknown device type, the PRODUCT_NAME is
+# not shown.
 USBdescExtras = {
     "USB_SERIAL_MTP_AUDIO": """
         #define VENDOR_ID        0x16C0
@@ -179,7 +190,7 @@ USBdescExtras = {
 
     "USB_MTP_AUDIO_MIDI": """
         #define VENDOR_ID        0x16C0
-        #define PRODUCT_ID       0x04D1
+        #define PRODUCT_ID       0x0484
         #define BCD_DEVICE		 0x0210
         #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}
         #define MANUFACTURER_NAME_LEN    11
@@ -291,7 +302,8 @@ def json2desc(d):
                 s += f"\n#elif defined({option['define']})"
                 s += descTidy(option['desc'])
 
-#        s += "\n"
+    if "" != s:
+        s = "#if 0" + s + "\n#endif\n"
     return s
 
 # Save output
