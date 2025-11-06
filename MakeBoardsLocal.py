@@ -125,7 +125,7 @@ menuUSB = {
 USBdescExtras = {
     "USB_SERIAL_MTP_AUDIO": """
         #define VENDOR_ID        0x16C0
-        #define PRODUCT_ID        0x048A
+        #define PRODUCT_ID       0x048A
         #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}
         #define MANUFACTURER_NAME_LEN    11
         #define PRODUCT_NAME        {'T','e','e','n','s','y',' ','M','T','P','/','A','u','d','i','o'}
@@ -163,12 +163,69 @@ USBdescExtras = {
         #define AUDIO_RX_ENDPOINT     5
         #define AUDIO_RX_SIZE         180
         #define AUDIO_SYNC_ENDPOINT    6
+        
         #define ENDPOINT2_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT
         #define ENDPOINT3_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK
         #define ENDPOINT4_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK
         #define ENDPOINT5_CONFIG    ENDPOINT_RECEIVE_ISOCHRONOUS + ENDPOINT_TRANSMIT_ISOCHRONOUS
         #define ENDPOINT6_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS
         #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT
+        """,
+
+    "USB_MTP_AUDIO_MIDI": """
+        #define VENDOR_ID        0x16C0
+        #define PRODUCT_ID       0x04D1
+        #define BCD_DEVICE		 0x0210
+        #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}
+        #define MANUFACTURER_NAME_LEN    11
+        #define PRODUCT_NAME        {'T','e','e','n','s','y',' ','M','T','P','/','A','u','d','i','o','/','M','I','D','I'}
+        #define PRODUCT_NAME_LEN    21
+        #define EP0_SIZE            64
+        #define NUM_ENDPOINTS          7
+        #define NUM_INTERFACE         6
+
+        #define SEREMU_INTERFACE      0	// Serial emulation
+        #define SEREMU_TX_ENDPOINT     2
+        #define SEREMU_TX_SIZE          64
+        #define SEREMU_TX_INTERVAL      1
+        #define SEREMU_RX_ENDPOINT     2
+        #define SEREMU_RX_SIZE          32
+        #define SEREMU_RX_INTERVAL      2
+
+        #define MTP_INTERFACE        1    // MTP
+        #define MTP_TX_ENDPOINT       3
+        #define MTP_TX_SIZE_12         64
+        #define MTP_TX_SIZE_480        512
+        #define MTP_RX_ENDPOINT       3
+        #define MTP_RX_SIZE_12         64
+        #define MTP_RX_SIZE_480        512
+        #define MTP_EVENT_ENDPOINT    4
+        #define MTP_EVENT_SIZE         32
+        #define MTP_EVENT_INTERVAL_12  10    // 10 = 10 ms
+        #define MTP_EVENT_INTERVAL_480 7    // 7 = 8 ms
+        
+        #define MIDI_INTERFACE       2	// MIDI
+        #define MIDI_NUM_CABLES        1
+        #define MIDI_TX_ENDPOINT      5
+        #define MIDI_TX_SIZE_12        64
+        #define MIDI_TX_SIZE_480       512
+        #define MIDI_RX_ENDPOINT      5
+        #define MIDI_RX_SIZE_12        64
+        #define MIDI_RX_SIZE_480       512
+
+        #define AUDIO_INTERFACE      3    // Audio (uses 3 consecutive interfaces)
+        #define AUDIO_TX_ENDPOINT     6
+        #define AUDIO_TX_SIZE          180
+        #define AUDIO_RX_ENDPOINT     6
+        #define AUDIO_RX_SIZE          180
+        #define AUDIO_SYNC_ENDPOINT   7
+
+        #define ENDPOINT2_CONFIG	ENDPOINT_RECEIVE_INTERRUPT + ENDPOINT_TRANSMIT_INTERRUPT // Serial emulation
+        #define ENDPOINT3_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK // MTP TX/RX
+        #define ENDPOINT4_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT  // MTP event
+        #define ENDPOINT5_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK // MIDI
+        #define ENDPOINT6_CONFIG    ENDPOINT_RECEIVE_ISOCHRONOUS + ENDPOINT_TRANSMIT_ISOCHRONOUS // Audio TX/RX
+        #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS // Audio sync
         """
 }
 
@@ -212,7 +269,12 @@ def json2txt(d):
 
 # Tidy up USB descriptor defines
 def descTidy(s):
-    return re.sub("^\s+","  ",s,flags=re.MULTILINE)
+#    return re.sub("^\s+","  ",s,flags=re.MULTILINE)
+    s = re.sub("^\n+","//\n",s,flags=re.MULTILINE) # retain blank lines
+    s = re.sub("^\s+\n","//\n",s,flags=re.MULTILINE) # retain blank lines
+    s = re.sub("^\s+","  ",s,flags=re.MULTILINE) # indent 2 spaces
+    s = re.sub("//$","",s,flags=re.MULTILINE) # remove blank retainer
+    return s
 
 # Return all USB descriptor configurations
 def json2desc(d):
@@ -220,11 +282,10 @@ def json2desc(d):
     for entry in d["entries"]:
         for option in entry["options"]:
             if 'desc' in option:
-                s2  = f"#elif defined({option['define']})"
-                s2 += option['desc']
-                s += descTidy(s2)
+                s += f"\n#elif defined({option['define']})"
+                s += descTidy(option['desc'])
 
-        s += "\n"
+#        s += "\n"
     return s
 
 # Convert description of menu options into JSON or text 
@@ -232,13 +293,15 @@ def json2desc(d):
 if 0:    
     menuAll=json.load(open("boards.local.json")) # load pre-built set of options from JSON file
 
-if 1:
+if 0:
     print(json.dumps(menuAll,indent=2)) # create a JSON file
 
 if 0:
     for idx in menuAll:
         print(json2txt(menuAll[idx])) # create the boards.local.txt file
 
-if 0:
+if 1:
     for idx in menuAll:
-        print(json2desc(menuAll[idx])) # create the extras for usb_desc.h file
+        s = json2desc(menuAll[idx]) # create the extras for usb_desc.h file
+        if "" != s:
+            print(s)
