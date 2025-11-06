@@ -1,6 +1,10 @@
 import json
 import re
+import argparse
+import os
 
+###################################################################
+# New menu entries
 menuAudio = {
     "header":
     """## Audio
@@ -94,7 +98,6 @@ menuGDB = {
     ]
 }
 
-
 menuUSB = {
     "header":
     """## USB
@@ -120,8 +123,10 @@ menuUSB = {
 
     ]
 }
+###################################################################
 
-# 
+###################################################################
+# New USB options - must match entries in menuUSB
 USBdescExtras = {
     "USB_SERIAL_MTP_AUDIO": """
         #define VENDOR_ID        0x16C0
@@ -228,6 +233,7 @@ USBdescExtras = {
         #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS // Audio sync
         """
 }
+###################################################################
 
 def insertUSBdescs(target,descs):
     for desc in descs:
@@ -271,8 +277,8 @@ def json2txt(d):
 def descTidy(s):
 #    return re.sub("^\s+","  ",s,flags=re.MULTILINE)
     s = re.sub("^\n+","//\n",s,flags=re.MULTILINE) # retain blank lines
-    s = re.sub("^\s+\n","//\n",s,flags=re.MULTILINE) # retain blank lines
-    s = re.sub("^\s+","  ",s,flags=re.MULTILINE) # indent 2 spaces
+    s = re.sub("^\\s+\n","//\n",s,flags=re.MULTILINE) # retain blank lines
+    s = re.sub("^\\s+","  ",s,flags=re.MULTILINE) # indent 2 spaces
     s = re.sub("//$","",s,flags=re.MULTILINE) # remove blank retainer
     return s
 
@@ -288,20 +294,69 @@ def json2desc(d):
 #        s += "\n"
     return s
 
-# Convert description of menu options into JSON or text 
-# Just prints the output: re-direct to a file once you're happy
-if 0:    
-    menuAll=json.load(open("boards.local.json")) # load pre-built set of options from JSON file
+# Save output
+def saveOutput(root,extn,output):
+    if extn: 
+        if "." != extn[0]:
+            extn = "." + extn
+        ffp = root + extn
+    else:
+        ffp = root        
+    of = open(ffp, "w")
+    of.write(output)
+    of.close()
 
-if 0:
-    print(json.dumps(menuAll,indent=2)) # create a JSON file
+    if args.verbose:
+        print(f"Saved {ffp}")
 
-if 0:
+
+parser = argparse.ArgumentParser(
+    description="Create modified Tools menu items for Teensyduino"
+)
+parser.add_argument("-l", "--load", help="load modifications from LOAD file (JSON format, as saved using --json option)")
+parser.add_argument("-s", "--save", nargs='?', const='boards.local', help="save outputs to this file [default boards.local]; if omitted output is to the console")
+parser.add_argument("-b", "--boards", action='store_true', help="save <SAVE>.txt")
+parser.add_argument("-j", "--json", action='store_true', help="save to <SAVE>.json file for later re-load")
+parser.add_argument("-e", "--extra", nargs='?', const='usb_extra.h', help="save extra USB configurations to EXTRA file [default usb_extra.h]")
+parser.add_argument("-v", "--verbose", action='store_true')
+args = parser.parse_args()
+
+# Convert description of menu options into JSON or text
+# Use command line options to decide where output goes
+if args.load:    
+    menuAll=json.load(open(args.load)) # load pre-built set of options from JSON file
+
+root = None
+if args.save:
+    root = args.save
+    root = re.sub("[.](json|h|txt)$", "", root) # remove file type if provided
+
+
+if args.json: # create a JSON file
+    output = json.dumps(menuAll,indent=2) + "\n"
+    if root:
+        saveOutput(root,"json",output)
+    else:        
+        print(output) 
+
+if args.boards: # create the boards.local.txt file
+    output = ""
     for idx in menuAll:
-        print(json2txt(menuAll[idx])) # create the boards.local.txt file
+        output += json2txt(menuAll[idx]) + "\n"
+    if root:
+        saveOutput(root,"txt",output)
+    else:        
+        print(output)
 
-if 1:
+if args.extra: # create the extras for usb_desc.h file
+    output = ""
     for idx in menuAll:
-        s = json2desc(menuAll[idx]) # create the extras for usb_desc.h file
+        s = json2desc(menuAll[idx])
         if "" != s:
-            print(s)
+            output += s
+    if root:
+        saveOutput(args.extra,None,output)
+    else:
+        print(output)
+
+# print(args,root)
