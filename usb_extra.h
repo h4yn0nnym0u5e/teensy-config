@@ -49,7 +49,7 @@
   
 #elif defined(USB_MTP_AUDIO_MIDI)
   #define VENDOR_ID        0x16C0
-  #define PRODUCT_ID       0x0484
+  #define PRODUCT_ID       0x04D1
   #define BCD_DEVICE		 0x0210
   #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}
   #define MANUFACTURER_NAME_LEN    11
