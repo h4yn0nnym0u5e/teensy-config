@@ -5,24 +5,33 @@ menu.audiorate=Audio sample rate
 
 teensy41.menu.audiorate.44=44.1kHz
 teensy41.menu.audiorate.44.build.flags.audiorate=44100.0f
+teensy41.menu.audiorate.44.build.flags.audiorateInt=44100
 teensy41.menu.audiorate.48=48kHz
 teensy41.menu.audiorate.48.build.flags.audiorate=48000.0f
+teensy41.menu.audiorate.48.build.flags.audiorateInt=48000
 teensy41.menu.audiorate.96=96kHz
 teensy41.menu.audiorate.96.build.flags.audiorate=96000.0f
+teensy41.menu.audiorate.96.build.flags.audiorateInt=96000
 
 teensy40.menu.audiorate.44=44.1kHz
 teensy40.menu.audiorate.44.build.flags.audiorate=44100.0f
+teensy40.menu.audiorate.44.build.flags.audiorateInt=44100
 teensy40.menu.audiorate.48=48kHz
 teensy40.menu.audiorate.48.build.flags.audiorate=48000.0f
+teensy40.menu.audiorate.48.build.flags.audiorateInt=48000
 teensy40.menu.audiorate.96=96kHz
 teensy40.menu.audiorate.96.build.flags.audiorate=96000.0f
+teensy40.menu.audiorate.96.build.flags.audiorateInt=96000
 
 teensyMM.menu.audiorate.44=44.1kHz
 teensyMM.menu.audiorate.44.build.flags.audiorate=44100.0f
+teensyMM.menu.audiorate.44.build.flags.audiorateInt=44100
 teensyMM.menu.audiorate.48=48kHz
 teensyMM.menu.audiorate.48.build.flags.audiorate=48000.0f
+teensyMM.menu.audiorate.48.build.flags.audiorateInt=48000
 teensyMM.menu.audiorate.96=96kHz
 teensyMM.menu.audiorate.96.build.flags.audiorate=96000.0f
+teensyMM.menu.audiorate.96.build.flags.audiorateInt=96000
 
 
 menu.audioblocksize=Audio block size
@@ -31,6 +40,10 @@ teensy41.menu.audioblocksize.normal=128 samples (normal)
 teensy41.menu.audioblocksize.normal.build.flags.audioblocksize=128
 teensy41.menu.audioblocksize.16=16 samples
 teensy41.menu.audioblocksize.16.build.flags.audioblocksize=16
+teensy41.menu.audioblocksize.32=32 samples
+teensy41.menu.audioblocksize.32.build.flags.audioblocksize=32
+teensy41.menu.audioblocksize.64=64 samples
+teensy41.menu.audioblocksize.64.build.flags.audioblocksize=64
 teensy41.menu.audioblocksize.256=256 samples
 teensy41.menu.audioblocksize.256.build.flags.audioblocksize=256
 
@@ -38,6 +51,10 @@ teensy40.menu.audioblocksize.normal=128 samples (normal)
 teensy40.menu.audioblocksize.normal.build.flags.audioblocksize=128
 teensy40.menu.audioblocksize.16=16 samples
 teensy40.menu.audioblocksize.16.build.flags.audioblocksize=16
+teensy40.menu.audioblocksize.32=32 samples
+teensy40.menu.audioblocksize.32.build.flags.audioblocksize=32
+teensy40.menu.audioblocksize.64=64 samples
+teensy40.menu.audioblocksize.64.build.flags.audioblocksize=64
 teensy40.menu.audioblocksize.256=256 samples
 teensy40.menu.audioblocksize.256.build.flags.audioblocksize=256
 
@@ -45,6 +62,10 @@ teensyMM.menu.audioblocksize.normal=128 samples (normal)
 teensyMM.menu.audioblocksize.normal.build.flags.audioblocksize=128
 teensyMM.menu.audioblocksize.16=16 samples
 teensyMM.menu.audioblocksize.16.build.flags.audioblocksize=16
+teensyMM.menu.audioblocksize.32=32 samples
+teensyMM.menu.audioblocksize.32.build.flags.audioblocksize=32
+teensyMM.menu.audioblocksize.64=64 samples
+teensyMM.menu.audioblocksize.64.build.flags.audioblocksize=64
 teensyMM.menu.audioblocksize.256=256 samples
 teensyMM.menu.audioblocksize.256.build.flags.audioblocksize=256
 

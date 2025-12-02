@@ -15,21 +15,24 @@
             "id": 44,
             "text": "44.1kHz",
             "entries": [
-              "build.flags.audiorate=44100.0f"
+              "build.flags.audiorate=44100.0f",
+              "build.flags.audiorateInt=44100"
             ]
           },
           {
             "id": 48,
             "text": "48kHz",
             "entries": [
-              "build.flags.audiorate=48000.0f"
+              "build.flags.audiorate=48000.0f",
+              "build.flags.audiorateInt=48000"
             ]
           },
           {
             "id": 96,
             "text": "96kHz",
             "entries": [
-              "build.flags.audiorate=96000.0f"
+              "build.flags.audiorate=96000.0f",
+              "build.flags.audiorateInt=96000"
             ]
           }
         ]
@@ -55,6 +58,20 @@
             "text": "16 samples",
             "entries": [
               "build.flags.audioblocksize=16"
+            ]
+          },
+          {
+            "id": 32,
+            "text": "32 samples",
+            "entries": [
+              "build.flags.audioblocksize=32"
+            ]
+          },
+          {
+            "id": 64,
+            "text": "64 samples",
+            "entries": [
+              "build.flags.audioblocksize=64"
             ]
           },
           {
