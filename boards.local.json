@@ -20,6 +20,14 @@
             ]
           },
           {
+            "id": 44117,
+            "text": "44.117kHz",
+            "entries": [
+              "build.flags.audiorate=44117.64706f",
+              "build.flags.audiorateInt=44100"
+            ]
+          },
+          {
             "id": 48,
             "text": "48kHz",
             "entries": [
