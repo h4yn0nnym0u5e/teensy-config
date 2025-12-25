@@ -2,6 +2,7 @@ import json
 import re
 import argparse
 import os
+import fileinput
 
 ###################################################################
 # New menu entries
@@ -17,11 +18,17 @@ menuAudio = {
             "boards": ["teensy41", "teensy40", "teensyMM"],
             "options": [
                 {"id": 44, "text": "44.1kHz",
-                 "entries": ["build.flags.audiorate=44100.0f"]},
+                 "entries": ["build.flags.audiorate=44100.0f",
+                             "build.flags.audiorateInt=44100"]},
+                {"id": 44117, "text": "44.117kHz",
+                 "entries": ["build.flags.audiorate=44117.64706f",
+                             "build.flags.audiorateInt=44117"]},
                 {"id": 48, "text": "48kHz",
-                 "entries": ["build.flags.audiorate=48000.0f"]},
+                 "entries": ["build.flags.audiorate=48000.0f",
+                             "build.flags.audiorateInt=48000"]},
                 {"id": 96, "text": "96kHz",
-                 "entries": ["build.flags.audiorate=96000.0f"]}
+                 "entries": ["build.flags.audiorate=96000.0f",
+                             "build.flags.audiorateInt=96000"]}
             ]
         },
         {
@@ -284,6 +291,7 @@ def json2txt(d):
     return s
 
 
+###################################################################
 # Tidy up USB descriptor defines
 def descTidy(s):
 #    return re.sub("^\s+","  ",s,flags=re.MULTILINE)
@@ -306,6 +314,8 @@ def json2desc(d):
         s = "#if 0" + s + "\n#endif\n"
     return s
 
+
+###################################################################
 # Save output
 def saveOutput(root,extn,output):
     if extn: 
@@ -322,17 +332,58 @@ def saveOutput(root,extn,output):
         print(f"Saved {ffp}")
 
 
+###################################################################
+# platform.txt is slightly different depending on whether
+# it was installed by Teensyduino or Boards Manager
+#
+# Generate both versions, so the user can copy the one
+# that's appropriate to their system
+platform = []
+# Load platform.txt file
+def loadPlatform(fn):
+    pf = []
+    for line in fileinput.input(fn):
+        pf += [line]   
+
+    return pf                     
+
+# Save [modified] platform.txt
+def savePlatform(pfx,fn,platform):
+    verbatim = "" ## all verbatim to start with
+    with open(pfx + fn, "w") as opf:
+        for line in platform:
+            if re.search("^\s*$",line)                :
+                verbatim = ""
+
+            uncommented = re.sub("^[#\s]*","",line)
+            if verbatim != pfx: # emit as it came in
+                if verbatim == "":
+                    opf.write(line)
+                else:
+                    opf.write("#" + uncommented)                    
+            else:
+                opf.write(uncommented)                    
+
+            if re.search("^# *Teensyduino *Installer", line):
+                verbatim = "TD"
+            elif re.search("^# *Arduino *Boards *Manager", line):
+                verbatim = "BM"
+
+
+###################################################################
 parser = argparse.ArgumentParser(
     description="Create modified Tools menu items for Teensyduino"
 )
 parser.add_argument("-l", "--load", help="load modifications from LOAD file (JSON format, as saved using --json option)")
 parser.add_argument("-s", "--save", nargs='?', const='boards.local', help="save outputs to this file [default boards.local]; if omitted output is to the console")
 parser.add_argument("-b", "--boards", action='store_true', help="save <SAVE>.txt")
+parser.add_argument("-p", "--platform", action='store_true', help="save <INSTALL>_platform.txt")
 parser.add_argument("-j", "--json", action='store_true', help="save to <SAVE>.json file for later re-load")
 parser.add_argument("-e", "--extra", nargs='?', const='usb_extra.h', help="save extra USB configurations to EXTRA file [default usb_extra.h]")
 parser.add_argument("-v", "--verbose", action='store_true')
 args = parser.parse_args()
 
+###################################################################
 # Convert description of menu options into JSON or text
 # Use command line options to decide where output goes
 if args.load:    
@@ -343,6 +394,10 @@ if args.save:
     root = args.save
     root = re.sub("[.](json|h|txt)$", "", root) # remove file type if provided
 
+if args.platform: # saving, and want to copy platform.txt
+    platform = loadPlatform("platform.txt")
+    for pfx in ["TD","BM"]: # save for Teensyduino and Boards Manager
+        savePlatform(pfx,"_platform.txt",platform)
 
 if args.json: # create a JSON file
     output = json.dumps(menuAll,indent=2) + "\n"
