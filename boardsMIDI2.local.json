@@ -203,35 +203,9 @@
           "teensy40",
           "teensyMM"
         ],
-
-        "unused-options" : [
-          {
-            "id": "serialmtpaudio",
-            "text": "Serial + MTP + Audio",
-            "entries": [
-              "build.usbtype=USB_SERIAL_MTP_AUDIO",
-              "upload_port.usbtype=USB_SERIAL_MTP_AUDIO"
-            ],
-            "desc": "\n        #define VENDOR_ID        0x16C0\n        #define PRODUCT_ID       0x048A\n        #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}\n        #define MANUFACTURER_NAME_LEN    11\n        #define PRODUCT_NAME        {'T','e','e','n','s','y',' ','M','T','P','/','A','u','d','i','o'}\n        #define PRODUCT_NAME_LEN    16\n        #define EP0_SIZE        64\n        #define NUM_ENDPOINTS         7\n        #define NUM_INTERFACE        6\n        #define CDC_IAD_DESCRIPTOR    1\n        #define CDC_STATUS_INTERFACE    0\n        #define CDC_DATA_INTERFACE    1    // Serial\n        #define CDC_ACM_ENDPOINT    2\n        #define CDC_RX_ENDPOINT       3\n        #define CDC_TX_ENDPOINT       3\n        #define CDC_ACM_SIZE          16\n        #define CDC_RX_SIZE_480       512\n        #define CDC_TX_SIZE_480       512\n        #define CDC_RX_SIZE_12        64\n        #define CDC_TX_SIZE_12        64\n        \n        #define MTP_INTERFACE        2    // MTP\n        #define MTP_TX_ENDPOINT      4\n        #define MTP_TX_SIZE_12       64\n        #define MTP_TX_SIZE_480      512\n        #define MTP_RX_ENDPOINT      4\n        #define MTP_RX_SIZE_12       64\n        #define MTP_RX_SIZE_480      512\n        #define MTP_EVENT_ENDPOINT    7\n        #define MTP_EVENT_SIZE    32\n        #define MTP_EVENT_INTERVAL_12    10    // 10 = 10 ms\n        #define MTP_EVENT_INTERVAL_480 7    // 7 = 8 ms\n        \n        #define AUDIO_INTERFACE    3    // Audio (uses 3 consecutive interfaces)\n        #define AUDIO_TX_ENDPOINT     5\n        #define AUDIO_TX_SIZE         180\n        #define AUDIO_RX_ENDPOINT     5\n        #define AUDIO_RX_SIZE         180\n        #define AUDIO_SYNC_ENDPOINT    6\n        \n        #define ENDPOINT2_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT\n        #define ENDPOINT3_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK\n        #define ENDPOINT4_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK\n        #define ENDPOINT5_CONFIG    ENDPOINT_RECEIVE_ISOCHRONOUS + ENDPOINT_TRANSMIT_ISOCHRONOUS\n        #define ENDPOINT6_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS\n        #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT\n        ",
-            "define": "USB_SERIAL_MTP_AUDIO"
-          },
-          {
-            "id": "mtpaudiomidi",
-            "text": "MTP + Audio + MIDI",
-            "entries": [
-              "build.usbtype=USB_MTP_AUDIO_MIDI",
-              "upload_port.usbtype=USB_MTP_AUDIO_MIDI",
-              "fake_serial=teensy_gateway"
-            ],
-            "desc": "\n        #define VENDOR_ID        0x16C0\n        #define PRODUCT_ID       0x04D1\n        #define BCD_DEVICE\t\t 0x0210\n        #define MANUFACTURER_NAME    {'T','e','e','n','s','y','d','u','i','n','o'}\n        #define MANUFACTURER_NAME_LEN    11\n        #define PRODUCT_NAME        {'T','e','e','n','s','y',' ','M','T','P','/','A','u','d','i','o','/','M','I','D','I'}\n        #define PRODUCT_NAME_LEN    21\n        #define EP0_SIZE            64\n        #define NUM_ENDPOINTS          7\n        #define NUM_INTERFACE         6\n\n        #define SEREMU_INTERFACE      0\t// Serial emulation\n        #define SEREMU_TX_ENDPOINT     2\n        #define SEREMU_TX_SIZE          64\n        #define SEREMU_TX_INTERVAL      1\n        #define SEREMU_RX_ENDPOINT     2\n        #define SEREMU_RX_SIZE          32\n        #define SEREMU_RX_INTERVAL      2\n\n        #define MTP_INTERFACE        1    // MTP\n        #define MTP_TX_ENDPOINT       3\n        #define MTP_TX_SIZE_12         64\n        #define MTP_TX_SIZE_480        512\n        #define MTP_RX_ENDPOINT       3\n        #define MTP_RX_SIZE_12         64\n        #define MTP_RX_SIZE_480        512\n        #define MTP_EVENT_ENDPOINT    4\n        #define MTP_EVENT_SIZE         32\n        #define MTP_EVENT_INTERVAL_12  10    // 10 = 10 ms\n        #define MTP_EVENT_INTERVAL_480 7    // 7 = 8 ms\n        \n        #define MIDI_INTERFACE       2\t// MIDI\n        #define MIDI_NUM_CABLES        1\n        #define MIDI_TX_ENDPOINT      5\n        #define MIDI_TX_SIZE_12        64\n        #define MIDI_TX_SIZE_480       512\n        #define MIDI_RX_ENDPOINT      5\n        #define MIDI_RX_SIZE_12        64\n        #define MIDI_RX_SIZE_480       512\n\n        #define AUDIO_INTERFACE      3    // Audio (uses 3 consecutive interfaces)\n        #define AUDIO_TX_ENDPOINT     6\n        #define AUDIO_TX_SIZE          180\n        #define AUDIO_RX_ENDPOINT     6\n        #define AUDIO_RX_SIZE          180\n        #define AUDIO_SYNC_ENDPOINT   7\n\n        #define ENDPOINT2_CONFIG\tENDPOINT_RECEIVE_INTERRUPT + ENDPOINT_TRANSMIT_INTERRUPT // Serial emulation\n        #define ENDPOINT3_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK // MTP TX/RX\n        #define ENDPOINT4_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_INTERRUPT  // MTP event\n        #define ENDPOINT5_CONFIG    ENDPOINT_RECEIVE_BULK + ENDPOINT_TRANSMIT_BULK // MIDI\n        #define ENDPOINT6_CONFIG    ENDPOINT_RECEIVE_ISOCHRONOUS + ENDPOINT_TRANSMIT_ISOCHRONOUS // Audio TX/RX\n        #define ENDPOINT7_CONFIG    ENDPOINT_RECEIVE_UNUSED + ENDPOINT_TRANSMIT_ISOCHRONOUS // Audio sync\n        ",
-            "define": "USB_MTP_AUDIO_MIDI"
-          }
-        ],
-
         "options": [
-          {
+          { "text": "MIDI 2.0",
             "id": "midi2",
-            "text": "MIDI 2.0",
             "entries": [
               "build.usbtype=USB_MIDI2",
               "upload_port.usbtype=USB_MIDI2",
@@ -240,9 +214,8 @@
             "desc": "// USB_MIDI2 descriptor already present (?)",
             "define": "USB_MIDI2"
           },
-          {
+          { "text": "Serial + MIDI 2.0",
             "id": "midi2serial",
-            "text": "Serial + MIDI 2.0",
             "entries": [
               "build.usbtype=USB_MIDI2_SERIAL",
               "upload_port.usbtype=USB_MIDI2_SERIAL"
@@ -250,9 +223,8 @@
             "desc": "// USB_MIDI2_SERIAL descriptor already present (?)",
             "define": "USB_MIDI2_SERIAL"
           },
-          {
+          { "text": "MIDI 2.0 x 4",
             "id": "midi2x4",
-            "text": "MIDI 2.0 x 4",
             "entries": [
               "build.usbtype=USB_MIDI2_4",
               "upload_port.usbtype=USB_MIDI2_4",
@@ -261,9 +233,8 @@
             "desc": "// USB_MIDI2_4 descriptor already present (?)",
             "define": "USB_MIDI2_4"
           },
-          {
+          { "text": "MIDI 2.0 x 16",
             "id": "midi2x16",
-            "text": "MIDI 2.0 x 16",
             "entries": [
               "build.usbtype=USB_MIDI2_16",
               "upload_port.usbtype=USB_MIDI2_16",
