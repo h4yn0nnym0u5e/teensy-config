@@ -1,20 +1,29 @@
 # https://www.pjrc.com/teensy/td_download.html
 # https://arduino.github.io/arduino-cli/latest/platform-specification/
-# https://arduino.github.io/arduino-cli/0.19/platform-specification/
+# https://arduino.github.io/arduino-cli/0.30/platform-specification/
 
 name=Teensyduino
 version=1.8.5
 rewriting=disabled
 
 # Teensyduino Installer
-compiler.path={runtime.hardware.path}/../tools/
-teensytools.path={runtime.hardware.path}/../tools/
+#compiler.path={runtime.hardware.path}/../tools/
+#teensytools.path={runtime.hardware.path}/../tools/
 
 # Arduino Boards Manager
-#compiler.path={runtime.tools.teensy-compile.path}/
-#teensytools.path={runtime.tools.teensy-tools.path}/
+compiler.path={runtime.tools.teensy-compile.path}/
+teensytools.path={runtime.tools.teensy-tools.path}/
 
 
+## Debugger - Experimental
+#debug.executable={build.path}/{build.project_name}.elf
+#debug.toolchain=gcc
+#debug.toolchain.path={compiler.path}{build.toolchain}
+#debug.toolchain.prefix=arm-none-eabi-
+#debug.server=openocd
+#debug.server.openocd.path={teensytools.path}tdebug
+#debug.server.openocd.scripts_dir=unused
+#debug.server.openocd.script=toolspath:{teensytools.path}:buildpath:{build.path}:name:{build.project_name}:board:{build.board}
 
 ## EEPROM Data
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
@@ -65,12 +74,13 @@ recipe.hooks.objcopy.postobjcopy.1.pattern="{teensytools.path}teensy_secure" enc
 ## Post Build - inform Teensy Loader of new file
 recipe.hooks.postbuild.1.pattern="{teensytools.path}teensy_post_compile" "-file={build.project_name}" "-path={build.path}" "-tools={teensytools.path}" "-board={build.board}"
 recipe.hooks.postbuild.2.pattern="{teensytools.path}stdout_redirect" "{build.path}/{build.project_name}.sym" "{compiler.path}{build.toolchain}{build.command.objdump}" -t -C "{build.path}/{build.project_name}.elf"
-recipe.hooks.postbuild.3.pattern="{teensytools.path}teensy_size" "{build.path}/{build.project_name}.elf"
+# Teensyduino Installer
+#recipe.hooks.postbuild.3.pattern="{teensytools.path}teensy_size" "{build.path}/{build.project_name}.elf"
 #
 # objdump to create .lst file is VERY SLOW for huge files
 # https://forum.pjrc.com/threads/68121?p=288306&viewfull=1#post288306
 #
-# recipe.hooks.postbuild.4.pattern="{teensytools.path}stdout_redirect" "{build.path}/{build.project_name}.lst" "{compiler.path}{build.toolchain}{build.command.objdump}" -d -S -C "{build.path}/{build.project_name}.elf"
+recipe.hooks.postbuild.4.pattern="{teensytools.path}stdout_redirect" "{build.path}/{build.project_name}.lst" "{compiler.path}{build.toolchain}{build.command.objdump}" -d -S -C "{build.path}/{build.project_name}.elf"
 
 
 ## Compute size
@@ -78,6 +88,8 @@ recipe.size.pattern="{compiler.path}{build.toolchain}{build.command.size}" -A "{
 recipe.size.regex=^(?:\.text|\.text\.progmem|\.text\.itcm|\.data|\.text\.csf)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.usbdescriptortable|\.dmabuffers|\.usbbuffers|\.data|\.bss|\.noinit|\.text\.itcm|\.text\.itcm\.padding)\s+([0-9]+).*
 recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
+# Arduino Boards Manager
+recipe.advanced_size.pattern="{teensytools.path}teensy_size" --json "{build.path}/{build.project_name}.elf"
 
 ## Teensy Ports Discovery
 ##  Arduino 1.8.9 requires pathPrefs patch
@@ -85,21 +97,21 @@ recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
 ##  so we can not use {teensytools.path} or {compiler.path} here
 
 # Teensyduino Installer
-discovery.teensy.pattern="{runtime.hardware.path}/../tools/teensy_ports" -J2
+#discovery.teensy.pattern="{runtime.hardware.path}/../tools/teensy_ports" -J2
 
 # Arduino Boards Manager
-#discovery.teensy.pattern="{runtime.tools.teensy-tools.path}/teensy_ports" -J2
-#pluggable_discovery.required=teensy:teensy-discovery
-#pluggable_monitor.required.teensy=teensy:teensy-monitor
+discovery.teensy.pattern="{runtime.tools.teensy-tools.path}/teensy_ports" -J2
+pluggable_discovery.required=teensy:teensy-discovery
+pluggable_monitor.required.teensy=teensy:teensy-monitor
 
 
 ## Teensy Loader
 
 # Teensyduino Installer
-tools.teensyloader.cmd.path={runtime.hardware.path}/../tools
+#tools.teensyloader.cmd.path={runtime.hardware.path}/../tools
 
 # Arduino Boards Manager
-#tools.teensyloader.cmd.path={runtime.tools.teensy-tools.path}
+tools.teensyloader.cmd.path={runtime.tools.teensy-tools.path}
 
 tools.teensyloader.upload.params.quiet=
 tools.teensyloader.upload.params.verbose=-verbose
