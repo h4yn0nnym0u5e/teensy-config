@@ -81,7 +81,7 @@ recipe.hooks.objcopy.postobjcopy.1.pattern="{teensytools.path}teensy_secure" enc
 recipe.hooks.postbuild.1.pattern="{teensytools.path}teensy_post_compile" "-file={build.project_name}" "-path={build.path}" "-tools={teensytools.path}" "-board={build.board}"
 recipe.hooks.postbuild.2.pattern="{teensytools.path}stdout_redirect" "{build.path}/{build.project_name}.sym" "{compiler.path}{build.toolchain}{build.command.objdump}" -t -C "{build.path}/{build.project_name}.elf"
 # Teensyduino Installer
-recipe.hooks.postbuild.3.pattern="{teensytools.path}teensy_size" "{build.path}/{build.project_name}.elf"
+#recipe.hooks.postbuild.3.pattern="{teensytools.path}teensy_size" "{build.path}/{build.project_name}.elf"
 #
 # objdump to create .lst file is VERY SLOW for huge files
 # https://forum.pjrc.com/threads/68121?p=288306&viewfull=1#post288306
@@ -94,6 +94,8 @@ recipe.size.pattern="{compiler.path}{build.toolchain}{build.command.size}" -A "{
 recipe.size.regex=^(?:\.text|\.text\.progmem|\.text\.itcm|\.data|\.text\.csf)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.usbdescriptortable|\.dmabuffers|\.usbbuffers|\.data|\.bss|\.noinit|\.text\.itcm|\.text\.itcm\.padding)\s+([0-9]+).*
 recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
+# Arduino Boards Manager
+recipe.advanced_size.pattern="{teensytools.path}teensy_size" --json "{build.path}/{build.project_name}.elf"
 
 ## Teensy Ports Discovery
 ##  Arduino 1.8.9 requires pathPrefs patch

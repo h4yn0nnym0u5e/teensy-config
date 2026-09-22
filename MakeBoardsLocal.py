@@ -338,6 +338,10 @@ def saveOutput(root,extn,output):
 #
 # Generate both versions, so the user can copy the one
 # that's appropriate to their system
+#
+# Previously started from a platform.txt installed using 
+# Teensyduino (so, IDE 1.x) in Windows.
+
 platform = []
 # Load platform.txt file
 def loadPlatform(fn):
@@ -352,10 +356,13 @@ def savePlatform(pfx,fn,platform):
     verbatim = "" ## all verbatim to start with
     with open(pfx + fn, "w") as opf:
         for line in platform:
-            if re.search("^\s*$",line)                :
+            # blank line or spaces only terminates commenting-out
+            if re.search("^\s*$",line):
                 verbatim = ""
 
             uncommented = re.sub("^[#\s]*","",line)
+            if "" == uncommented:
+                verbatim = ""
             if verbatim != pfx: # emit as it came in
                 if verbatim == "":
                     opf.write(line)
@@ -364,6 +371,7 @@ def savePlatform(pfx,fn,platform):
             else:
                 opf.write(uncommented)                    
 
+            # Installer type comment triggers install-specific commenting
             if re.search("^# *Teensyduino *Installer", line):
                 verbatim = "TD"
             elif re.search("^# *Arduino *Boards *Manager", line):
@@ -395,7 +403,7 @@ if args.save:
     root = re.sub("[.](json|h|txt)$", "", root) # remove file type if provided
 
 if args.platform: # saving, and want to copy platform.txt
-    platform = loadPlatform("platform.txt")
+    platform = loadPlatform("platform.txt") # should work from either TD or BM file ... in theory!
     for pfx in ["TD","BM"]: # save for Teensyduino and Boards Manager
         savePlatform(pfx,"_platform.txt",platform)
 
